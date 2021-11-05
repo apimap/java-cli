@@ -5,6 +5,56 @@ on:
       - main
   workflow_dispatch:
 jobs:
+
+  linuxBuild:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+      - uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 16
+          graalvm-version: 21.1.0
+          native-image: true
+      - name: Build
+        run: ./gradlew nativeImage
+        env:
+          MULTI_PACKAGES_TOKEN: ${{ secrets.MULTI_PACKAGES_TOKEN }}
+          MULTI_PACKAGES_USER: ${{ secrets.MULTI_PACKAGES_USER }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: apimap
+          path: build/executable/apimap
+
+  windowsBuild:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+      - uses: ayltai/setup-graalvm@v1
+        with:
+          java-version: 16
+          graalvm-version: 21.1.0
+          native-image: true
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Build
+        run: ./gradlew nativeImage
+        env:
+          MULTI_PACKAGES_TOKEN: ${{ secrets.MULTI_PACKAGES_TOKEN }}
+          MULTI_PACKAGES_USER: ${{ secrets.MULTI_PACKAGES_USER }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: apimap.exe
+          path: build/executable/apimap.exe
+
   macosBuild:
     runs-on: macos-10.15
     steps:
