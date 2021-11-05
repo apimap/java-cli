@@ -1,0 +1,95 @@
+plugins {
+    id 'application'
+    id 'java'
+    id 'org.mikeneck.graalvm-native-image' version 'v0.8.0'
+}
+
+group 'io.apimap.client'
+sourceCompatibility = 11
+
+ext {
+    javaMainClass = "io.apimap.cli.TopLevelCommandCollection"
+    execFileName = "apimap"
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://maven.pkg.github.com/apimap/java-rest-client")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("MULTI_PACKAGES_USER")
+            password = project.findProperty("gpr.key") ?: System.getenv("MULTI_PACKAGES_TOKEN")
+        }
+    }
+    maven {
+        url = uri("https://maven.pkg.github.com/apimap/java-file-interface")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
+
+dependencies {
+    annotationProcessor 'info.picocli:picocli-codegen:4.6.1'
+
+    implementation 'info.picocli:picocli:4.6.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.0'
+    implementation 'commons-logging:commons-logging:1.2'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.graalvm.sdk:graal-sdk:21.2.0'
+
+    implementation 'io.apimap.file:file-interface:1.0'
+    implementation 'io.apimap.client:rest-client:2.0-SNAPSHOT'
+
+    testCompile 'junit:junit:4.13.2'
+}
+
+nativeImage {
+    graalVmHome = System.getenv('GRAALVM_HOME')
+    mainClass = javaMainClass
+    executableName = execFileName
+    outputDirectory = file("$buildDir/executable")
+    arguments(
+            "--enable-http",
+            "--enable-https",
+            "--verbose",
+            "--no-fallback",
+            "--enable-all-security-services",
+            "--report-unsupported-elements-at-runtime",
+            "-H:ReflectionConfigurationFiles=graalvm-configuration/native-code-reflection-config.json",
+            "-H:ReflectionConfigurationFiles=graalvm-configuration/apache-reflection-config.json",
+            "-H:DynamicProxyConfigurationFiles=graalvm-configuration/apache-proxy-config.json",
+    )
+    doLast{
+        if(org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+            exec {
+                executable 'windows/alter-windows-exec-property-table.bat'
+            }
+        }
+    }
+}
+
+generateNativeImageConfig {
+    enabled = false
+}
+
+application {
+    mainClassName = javaMainClass
+}
+
+compileJava {
+    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+}
+
+jar {
+    baseName = execFileName
+    manifest {
+        attributes(
+                "Main-Class": javaMainClass,
+                'Class-Path': 'picocli-4.5.1.jar'
+        )
+    }
+}

@@ -1,0 +1,55 @@
+/*
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+ */
+
+package io.apimap.cli;
+
+import io.apimap.cli.commands.DeleteCommand;
+import io.apimap.cli.commands.PublishCommand;
+import io.apimap.cli.commands.RenameCommand;
+import io.apimap.cli.commands.TokenCommand;
+import io.apimap.cli.commands.ValidationCommand;
+import picocli.CommandLine;
+
+import java.util.logging.LogManager;
+
+@CommandLine.Command(
+        version = "1.3.1",
+        name = "apicatalog",
+        mixinStandardHelpOptions = true,
+        subcommands = {
+                PublishCommand.class,
+                ValidationCommand.class,
+                DeleteCommand.class,
+                TokenCommand.class,
+                RenameCommand.class
+        }
+)
+public class TopLevelCommandCollection implements Runnable {
+
+    public static void main(String[] args) {
+        LogManager.getLogManager().reset(); // Disable log outputs to enable chaining commands in the terminal
+        int exitCode = new CommandLine(new TopLevelCommandCollection()).execute(args);
+        System.exit(exitCode);
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Apimap.io CLI. Use --help to view available commands");
+    }
+}
