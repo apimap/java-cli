@@ -1,7 +1,7 @@
 plugins {
     id 'application'
     id 'java'
-    id 'org.mikeneck.graalvm-native-image' version 'v0.8.0'
+    id 'org.mikeneck.graalvm-native-image' version 'v1.4.1'
 }
 
 group 'io.apimap.cli'
@@ -88,7 +88,7 @@ jar {
     manifest {
         attributes(
                 "Main-Class": javaMainClass,
-                'Class-Path': 'picocli-4.5.1.jar'
+                'Class-Path': 'picocli-4.6.1.jar'
         )
     }
 }

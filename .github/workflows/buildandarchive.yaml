@@ -1,4 +1,4 @@
-name: Build and Archive Linux
+name: Build and Archive
 on:
   push:
     branches:
@@ -77,4 +77,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: apimap
-          path: build/executable/apimap
+          path: build/executable/apimap.app
