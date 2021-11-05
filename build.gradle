@@ -4,8 +4,7 @@ plugins {
     id 'org.mikeneck.graalvm-native-image' version 'v0.8.0'
 }
 
-group 'io.apimap.client'
-sourceCompatibility = 11
+group 'io.apimap.cli'
 
 ext {
     javaMainClass = "io.apimap.cli.TopLevelCommandCollection"
@@ -44,7 +43,7 @@ dependencies {
     implementation 'io.apimap.file:file-interface:1.0'
     implementation 'io.apimap.client:rest-client:2.0-SNAPSHOT'
 
-    testCompile 'junit:junit:4.13.2'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 nativeImage {
