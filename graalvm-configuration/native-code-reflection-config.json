@@ -10,84 +10,84 @@
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.api.entities.api.ClassificationRootRestEntity",
+    "name" : "io.apimap.api.rest.ClassificationRootRestEntity",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.api.entities.api.ClassificationDataRestEntity",
+    "name" : "io.apimap.api.rest.ClassificationDataRestEntity",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.api.entities.api.MetadataDataRestEntity",
+    "name" : "io.apimap.api.rest.MetadataDataRestEntity",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.api.entities.api.MetadataRootRestEntity",
+    "name" : "io.apimap.api.rest.MetadataRootRestEntity",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.api.entities.api.ApiVersionDataRestEntity",
+    "name" : "io.apimap.api.rest.ApiVersionDataRestEntity",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.api.entities.api.ApiDataRestEntity",
+    "name" : "io.apimap.api.rest.ApiDataRestEntity",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.api.entities.api.JsonApiRootObject",
+    "name" : "io.apimap.api.rest.JsonApiRootObject",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.file.entities.file.MetadataFile",
+    "name" : "io.apimap.file.metadata.MetadataFile",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.file.entities.file.MetadataDataWrapper",
+    "name" : "io.apimap.file.metadata.MetadataDataWrapper",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.api.entities.api.ApiDataApiMetadataEntity",
+    "name" : "io.apimap.api.rest.ApiDataApiMetadataEntity",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.file.entities.file.TaxonomyFile",
+    "name" : "io.apimap.file.taxonomy.TaxonomyFile",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.file.entities.file.TaxonomyDataWrapper",
+    "name" : "io.apimap.file.taxonomy.TaxonomyDataWrapper",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
