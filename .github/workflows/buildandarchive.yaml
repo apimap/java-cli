@@ -21,6 +21,9 @@ jobs:
           native-image: true
       - name: Build
         run: ./gradlew nativeImage
+        env:
+          MULTI_PACKAGES_TOKEN: ${{ secrets.MULTI_PACKAGES_TOKEN }}
+          MULTI_PACKAGES_USER: ${{ secrets.MULTI_PACKAGES_USER }}
       - uses: actions/upload-artifact@v2
         with:
           name: apimap
