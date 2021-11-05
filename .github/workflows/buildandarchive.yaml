@@ -19,9 +19,9 @@ jobs:
           java-version: 16
           graalvm-version: 21.1.0
           native-image: true
+      - uses: ilammy/msvc-dev-cmd@v1
       - name: Build
         run: ./gradlew nativeImage
-        shell: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat
         env:
           MULTI_PACKAGES_TOKEN: ${{ secrets.MULTI_PACKAGES_TOKEN }}
           MULTI_PACKAGES_USER: ${{ secrets.MULTI_PACKAGES_USER }}
