@@ -76,5 +76,5 @@ jobs:
           MULTI_PACKAGES_USER: ${{ secrets.MULTI_PACKAGES_USER }}
       - uses: actions/upload-artifact@v2
         with:
-          name: apimap
-          path: build/executable/apimap.app
+          name: apimap.app
+          path: build/executable/apimap
