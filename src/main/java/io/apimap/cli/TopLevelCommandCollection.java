@@ -29,8 +29,8 @@ import picocli.CommandLine;
 import java.util.logging.LogManager;
 
 @CommandLine.Command(
-        version = "1.3.1",
-        name = "apicatalog",
+        version = "1.0.0",
+        name = "apimap",
         mixinStandardHelpOptions = true,
         subcommands = {
                 PublishCommand.class,
