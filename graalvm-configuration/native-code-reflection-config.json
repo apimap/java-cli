@@ -52,6 +52,13 @@
     "allPublicFields" : true
   },
   {
+    "name" : "io.apimap.api.rest.jsonapi.JsonApiRestRequestWrapper",
+    "allPublicConstructors" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true
+  },
+  {
     "name" : "io.apimap.api.rest.jsonapi.JsonApiRestResponseWrapper",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
