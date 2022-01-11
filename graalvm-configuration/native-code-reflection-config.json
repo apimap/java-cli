@@ -24,6 +24,13 @@
     "allPublicFields" : true
   },
   {
+    "name" : "io.apimap.api.rest.jsonapi.JsonApiRelationships.Link",
+    "allPublicConstructors" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true
+  },
+  {
     "name" : "io.apimap.api.rest.MetadataDataRestEntity",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
