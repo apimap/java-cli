@@ -24,13 +24,6 @@
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.api.rest.jsonapi.JsonApiRelationship$Link",
-    "allPublicConstructors" : true,
-    "allPublicMethods" : true,
-    "allDeclaredFields" : true,
-    "allPublicFields" : true
-  },
-  {
     "name" : "io.apimap.api.rest.MetadataDataRestEntity",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
@@ -70,7 +63,9 @@
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
-    "allPublicFields" : true
+    "allPublicFields" : true,
+    "allPublicClasses" : true,
+    "allDeclaredClasses" : true
   },
   {
     "name" : "io.apimap.api.rest.jsonapi.JsonApiRestResponseWrapper",
