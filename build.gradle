@@ -41,7 +41,7 @@ dependencies {
     implementation 'org.graalvm.sdk:graal-sdk:21.2.0'
 
     implementation 'io.apimap.file:file-interface:1.0'
-    implementation 'io.apimap.client:rest-client:2.0-SNAPSHOT'
+    implementation 'io.apimap.client:rest-client:2.0.4'
 
     testImplementation 'junit:junit:4.13.2'
 }
