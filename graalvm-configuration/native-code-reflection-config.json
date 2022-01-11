@@ -24,7 +24,7 @@
     "allPublicFields" : true
   },
   {
-    "name" : "io.apimap.api.rest.jsonapi.JsonApiRelationships.Link",
+    "name" : "io.apimap.api.rest.jsonapi.JsonApiRelationship$Link",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,
