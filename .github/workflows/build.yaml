@@ -1,8 +1,8 @@
-name: "Build and Archive"
+name: "Build"
 on:
   push:
     branches:
-      - main
+      - 'feature/**'
   workflow_dispatch:
 jobs:
   linuxBuild:
