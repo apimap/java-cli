@@ -73,6 +73,7 @@ public class TokenUtil {
     }
 
     private File configurationFile() {
+        System.out.println("Token file @ " + System.getProperty("user.home") + "/.config/" + this.filename);
         return new File(System.getProperty("user.home") + "/.config/" + this.filename);
     }
 

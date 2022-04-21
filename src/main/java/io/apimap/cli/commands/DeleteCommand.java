@@ -82,7 +82,7 @@ public class DeleteCommand extends ApiCommand implements Runnable {
                         .deleteResource();
             }
 
-            if (metadataUploadStatus < 200 && metadataUploadStatus > 299) {
+            if (metadataUploadStatus < 200 || metadataUploadStatus > 299) {
                 System.out.println("[Error] Unable to delete API ( Status code: " + metadataUploadStatus + " )");
                 return;
             }

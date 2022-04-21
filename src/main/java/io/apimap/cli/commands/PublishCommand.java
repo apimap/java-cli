@@ -24,7 +24,6 @@ import io.apimap.api.rest.ApiVersionDataRestEntity;
 import io.apimap.api.rest.ClassificationDataRestEntity;
 import io.apimap.api.rest.ClassificationRootRestEntity;
 import io.apimap.api.rest.MetadataDataRestEntity;
-import io.apimap.api.rest.MetadataRootRestEntity;
 import io.apimap.api.rest.jsonapi.JsonApiRestResponseWrapper;
 import io.apimap.cli.utils.MetadataUtil;
 import io.apimap.cli.utils.TaxonomyUtil;
@@ -107,7 +106,8 @@ public class PublishCommand extends ApiCommand implements Runnable {
     }
 
     private void uploadMetadata(MetadataFile metadataFile, RestClientConfiguration configuration){
-        MetadataDataRestEntity metadataDataRestEntity = new MetadataDataRestEntity(
+
+        MetadataDataRestEntity metadataDataApiEntity = new MetadataDataRestEntity(
                 metadataFile.getData().getName(),
                 metadataFile.getData().getDescription(),
                 metadataFile.getData().getVisibility(),
@@ -121,14 +121,14 @@ public class PublishCommand extends ApiCommand implements Runnable {
                 metadataFile.getData().getDocumentation()
         );
 
-        MetadataRootRestEntity metadataRootRestEntity = new MetadataRootRestEntity(metadataDataRestEntity, metadataFile.getVersion());
-
-        ApiDataRestEntity apiDataRestEntity = new ApiDataRestEntity(
-                metadataFile.getData().getName(),
+        ApiDataRestEntity apiDataApiEntity = new ApiDataRestEntity(
+                metadataDataApiEntity.getName(),
                 this.codeRepositoryUrl
         );
 
-        ApiVersionDataRestEntity apiVersionDataRestEntity = new ApiVersionDataRestEntity(metadataDataRestEntity.getApiVersion());
+        ApiVersionDataRestEntity apiVersionDataApiEntity = new ApiVersionDataRestEntity(
+                metadataDataApiEntity.getApiVersion()
+        );
 
         Consumer<Object> apiCreatedCallback = content -> {
             TokenUtil util = new TokenUtil(TokenUtil.FILENAME);
@@ -149,17 +149,19 @@ public class PublishCommand extends ApiCommand implements Runnable {
             System.err.println("[ERROR] Upload failed with: " + content);
         };
 
-        MetadataRootRestEntity metadataReturnObject = null;
+        System.out.println(apiDataApiEntity.getAttributes().toString());
+
+        MetadataDataRestEntity metadataReturnObject = null;
         try {
             metadataReturnObject = IRestClient.withConfiguration(configuration)
                     .withErrorHandler(errorHandlerCallback)
                     .followCollection(JsonApiRestResponseWrapper.API_COLLECTION)
-                    .followCollection(metadataDataRestEntity.getName(), JsonApiRestResponseWrapper.VERSION_COLLECTION)
-                    .onMissingCreate(metadataDataRestEntity.getName(), apiDataRestEntity, apiCreatedCallback)
-                    .followResource(metadataDataRestEntity.getApiVersion())
-                    .onMissingCreate(metadataDataRestEntity.getApiVersion(), apiVersionDataRestEntity, apiVersionCreatedCallback)
+                    .followCollection(metadataDataApiEntity.getName(), JsonApiRestResponseWrapper.VERSION_COLLECTION)
+                    .onMissingCreate(metadataDataApiEntity.getName(), apiDataApiEntity, apiCreatedCallback)
+                    .followResource(metadataDataApiEntity.getApiVersion())
+                    .onMissingCreate(metadataDataApiEntity.getApiVersion(), apiVersionDataApiEntity, apiVersionCreatedCallback)
                     .followCollection(JsonApiRestResponseWrapper.METADATA_COLLECTION)
-                    .createOrUpdateResource(metadataRootRestEntity);
+                    .createOrUpdateResource(metadataDataApiEntity);
         } catch (IOException e) {
             System.err.println(e);
         } catch (IncorrectTokenException e) {
