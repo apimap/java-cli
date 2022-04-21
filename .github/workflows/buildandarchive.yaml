@@ -16,8 +16,8 @@ jobs:
           distribution: 'adopt'
       - uses: ayltai/setup-graalvm@v1
         with:
-          java-version: 16
-          graalvm-version: 21.2.0
+          java-version: 17
+          graalvm-version: 21.3.0
           native-image: true
       - name: Build
         run: ./gradlew nativeImage
@@ -40,8 +40,8 @@ jobs:
           distribution: 'adopt'
       - uses: ayltai/setup-graalvm@v1
         with:
-          java-version: 16
-          graalvm-version: 21.2.0
+          java-version: 17
+          graalvm-version: 21.3.0
           native-image: true
       - uses: ilammy/msvc-dev-cmd@v1
       - name: Build
@@ -65,8 +65,8 @@ jobs:
           distribution: 'adopt'
       - uses: ayltai/setup-graalvm@v1
         with:
-          java-version: 16
-          graalvm-version: 21.2.0
+          java-version: 17
+          graalvm-version: 21.3.0
           native-image: true
       - name: Build
         run: ./gradlew nativeImage
