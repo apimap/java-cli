@@ -258,7 +258,7 @@
     "allDeclaredMethods" : true
   },
   {
-    "name" : "io.apimap.api.rest.ApiDataApiMetadataEntity",
+    "name" : "io.apimap.api.rest.ApiDataMetadataEntity",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,

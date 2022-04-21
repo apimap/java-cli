@@ -8,11 +8,11 @@
         {
             VALUE "CompanyName",        "Apimap.io\0"
             VALUE "FileDescription",    "Apimap.io CLI\0"
-            VALUE "FileVersion",        "1.0.0.0\0"
+            VALUE "FileVersion",        "1.0.1.0\0"
             VALUE "LegalCopyright",     "(c) 2021 Apimap.io. All Rights Reserved\0"
             VALUE "OriginalFilename",   "apimap.exe\0"
             VALUE "ProductName",        "Apimap.io\0"
-            VALUE "ProductVersion",     "1.0.0.0\0"
+            VALUE "ProductVersion",     "1.0.1.0\0"
         }
     }
     BLOCK "VarFileInfo"
