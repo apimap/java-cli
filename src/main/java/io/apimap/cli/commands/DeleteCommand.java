@@ -46,6 +46,14 @@ public class DeleteCommand extends ApiCommand implements Runnable {
     )
     protected boolean recursive;
 
+    @CommandLine.Option(
+            names = {"--confirmation"},
+            description = "This will permanently REMOVE ALL information?",
+            interactive = true,
+            arity="0..1"
+    )
+    protected Boolean confirmation;
+
     @Override
     public void run() {
         if (this.endpointUrl == null) {
@@ -55,6 +63,16 @@ public class DeleteCommand extends ApiCommand implements Runnable {
 
         if (this.metadataFilePath == null) {
             System.err.println("[Error] Missing metadata file");
+            return;
+        }
+
+        if (confirmation == null) {
+            String s = System.console().readLine("Continue this dangerous action? y/n: ");
+            confirmation = Boolean.valueOf(s) || "y".equalsIgnoreCase(s);
+        }
+
+        if(!confirmation){
+            System.out.println("[CANCEL] Operation canceled");
             return;
         }
 

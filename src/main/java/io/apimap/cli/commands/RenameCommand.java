@@ -47,6 +47,14 @@ public class RenameCommand extends ApiCommand implements Runnable {
     )
     protected String toName;
 
+    @CommandLine.Option(
+            names = {"--confirmation"},
+            description = "Renaming an API will permanently REMOVE ALL associated information?",
+            interactive = true,
+            arity="0..1"
+    )
+    protected Boolean confirmation;
+
     @Override
     public void run() {
         if (this.endpointUrl == null) {
@@ -64,6 +72,16 @@ public class RenameCommand extends ApiCommand implements Runnable {
             return;
         }
 
+        if (confirmation == null) {
+            String s = System.console().readLine("Continue this dangerous action? y/n: ");
+            confirmation = Boolean.valueOf(s) || "y".equalsIgnoreCase(s);
+        }
+
+        if(!confirmation){
+            System.out.println("[CANCEL] Operation canceled");
+            return;
+        }
+
         RestClientConfiguration configuration = defaultConfiguration(fromName);
 
         try {
@@ -71,31 +89,41 @@ public class RenameCommand extends ApiCommand implements Runnable {
                 System.err.println("Rename failed with: " + content);
             };
 
-            ApiDataRestEntity entity = IRestClient.withConfiguration(configuration)
+            ApiDataRestEntity oldEntity = IRestClient.withConfiguration(configuration)
                     .withErrorHandler(errorHandlerCallback)
                     .followCollection(JsonApiRestResponseWrapper.API_COLLECTION)
                     .followResource(fromName)
                     .getResource(ApiDataRestEntity.class);
 
-            if(entity == null){
+            if(oldEntity == null){
                 System.err.println("[Error] Unable to get '" + fromName + "'");
                 return;
             }
 
-            entity.setName(toName);
+            oldEntity.setName(toName);
 
             ApiDataRestEntity newEntity = IRestClient.withConfiguration(configuration)
                     .withErrorHandler(errorHandlerCallback)
                     .followCollection(JsonApiRestResponseWrapper.API_COLLECTION)
                     .followResource(fromName)
-                    .createOrUpdateResource(entity);
+                    .createOrUpdateResource(oldEntity);
 
-            if(newEntity != null){
+            if(newEntity == null){
+                System.err.println("[Error] Unable to get new renamed API");
+                return;
+            }
+
+            int metadataUploadStatus = metadataUploadStatus = IRestClient.withConfiguration(configuration)
+                    .followCollection(JsonApiRestResponseWrapper.API_COLLECTION)
+                    .followResource(fromName)
+                    .deleteResource();
+
+            if (metadataUploadStatus > 200 && metadataUploadStatus < 299) {
                 System.out.println("[OK] Renamed API from '" + fromName + "' to '" + toName + "'");
                 return;
             }
 
-            System.err.println("[Error] Unable to rename API");
+            System.err.println("[Error] Unable to remove old API after rename");
         } catch (IOException | IncorrectTokenException e) {
             e.printStackTrace();
         }

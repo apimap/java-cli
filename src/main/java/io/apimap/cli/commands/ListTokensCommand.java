@@ -32,6 +32,9 @@ public class ListTokensCommand implements Runnable {
     @Override
     public void run() {
         TokenUtil util = new TokenUtil(TokenUtil.FILENAME);
+
+        System.out.println("Reading from: " + System.getProperty("user.home") + "/.config/" + TokenUtil.FILENAME);
+
         try {
             System.out.printf("%-30.30s  %-40.40s%n", "API", "Token");
             util.readFile().getTokens().forEach((key, value) -> {

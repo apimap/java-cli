@@ -72,9 +72,16 @@ public class TokenUtil {
         }
     }
 
-    private File configurationFile() {
-        System.out.println("Token file @ " + System.getProperty("user.home") + "/.config/" + this.filename);
-        return new File(System.getProperty("user.home") + "/.config/" + this.filename);
+    private File configurationFile() throws IOException {
+        File file = new File(System.getProperty("user.home") + "/.config/" + this.filename);
+
+        try {
+            file.createNewFile();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        return file;
     }
 
     private ObjectMapper defaultObjectMapper() {
