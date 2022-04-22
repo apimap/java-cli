@@ -21,6 +21,7 @@ package io.apimap.cli.commands;
 
 import io.apimap.api.rest.ApiDataRestEntity;
 import io.apimap.api.rest.jsonapi.JsonApiRestResponseWrapper;
+import io.apimap.cli.utils.ConfigurationFileUtil;
 import io.apimap.client.IRestClient;
 import io.apimap.client.RestClientConfiguration;
 import io.apimap.client.exception.IncorrectTokenException;
@@ -49,7 +50,7 @@ public class RenameCommand extends ApiCommand implements Runnable {
 
     @CommandLine.Option(
             names = {"--confirmation"},
-            description = "Renaming an API will permanently REMOVE ALL associated information?",
+            description = "Renaming an API will permanently REMOVE ALL associated information.",
             interactive = true,
             arity="0..1"
     )
@@ -58,8 +59,15 @@ public class RenameCommand extends ApiCommand implements Runnable {
     @Override
     public void run() {
         if (this.endpointUrl == null) {
-            System.err.println("[Error] Missing endpoint url");
-            return;
+            try {
+                this.endpointUrl = new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME).readEndpoint();
+            } catch (IOException ignored) {
+            }
+
+            if (this.endpointUrl == null) {
+                System.err.println("[Error] Missing endpoint url");
+                return;
+            }
         }
 
         if (this.fromName == null) {
@@ -73,7 +81,7 @@ public class RenameCommand extends ApiCommand implements Runnable {
         }
 
         if (confirmation == null) {
-            String s = System.console().readLine("Continue this dangerous action? y/n: ");
+            String s = System.console().readLine("Renaming an API will permanently REMOVE ALL associated information. Continue? y/n: ");
             confirmation = Boolean.valueOf(s) || "y".equalsIgnoreCase(s);
         }
 

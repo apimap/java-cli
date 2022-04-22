@@ -19,7 +19,6 @@ under the License.
 
 package io.apimap.cli;
 
-import io.apimap.cli.commands.ListTokensCommand;
 import org.junit.Test;
 
 public class ListTokensCommandTest {

@@ -19,7 +19,7 @@ under the License.
 
 package io.apimap.cli.commands;
 
-import io.apimap.cli.utils.TokenUtil;
+import io.apimap.cli.utils.ConfigurationFileUtil;
 import io.apimap.client.RestClientConfiguration;
 import picocli.CommandLine;
 
@@ -32,7 +32,6 @@ public class ApiCommand {
     )
     protected String endpointUrl;
 
-
     @CommandLine.Option(
             names = {"--token"},
             description = "API Authorization token"
@@ -42,9 +41,8 @@ public class ApiCommand {
     RestClientConfiguration defaultConfiguration(String apiName){
         if (this.token == null) {
             try {
-                return new RestClientConfiguration(new TokenUtil(TokenUtil.FILENAME).readApiToken(apiName), endpointUrl);
-            } catch (IOException e) {
-            }
+                return new RestClientConfiguration(new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME).readApiToken(apiName), endpointUrl);
+            } catch (IOException ignored) {}
         }
 
         return new RestClientConfiguration(this.token, endpointUrl);

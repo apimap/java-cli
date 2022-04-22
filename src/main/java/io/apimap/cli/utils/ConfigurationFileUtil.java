@@ -22,58 +22,64 @@ package io.apimap.cli.utils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import io.apimap.cli.entities.TokenFile;
+import io.apimap.cli.entities.ConfigurationFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
-public class TokenUtil {
-    public static String FILENAME = "apicatalog.conf";
+public class ConfigurationFileUtil {
+    public static String FILENAME = "apimap.conf";
 
-    private final String filename;
+    protected final String filename;
 
-    public TokenUtil(String filename) {
+    public ConfigurationFileUtil(String filename) {
         this.filename = filename;
     }
 
-    public TokenFile readFile() throws IOException {
+    public ConfigurationFile readFile() throws IOException {
         try {
-            return defaultObjectMapper().readValue(configurationFile(), TokenFile.class);
+            File file = configurationFile();
+
+            if(file.length() == 0){
+                return new ConfigurationFile();
+            }
+
+            return defaultObjectMapper().readValue(file, ConfigurationFile.class);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw e;
         }
     }
 
     public String readApiToken(String apiName) throws IOException {
-        try {
-            TokenFile file = readFile();
-            return file.getToken(apiName);
-        } catch (Exception e) {
-            throw e;
-        }
+        ConfigurationFile file = readFile();
+        return file.getToken(apiName);
+    }
+
+    public String readEndpoint() throws IOException {
+        ConfigurationFile file = readFile();
+        return file.getEndpoint();
     }
 
     public void writeApiToken(String apiName, String token) throws IOException {
-        TokenFile file = new TokenFile();
+        ConfigurationFile existingFileContent = readFile();
+        existingFileContent.setToken(apiName, token);
+        defaultObjectMapper().writeValue(configurationFile(), existingFileContent);
+    }
 
-        try {
-            file = readFile();
-        } catch (IOException e) {
-            // Ignore exceptions, just create a new file
-        }
+    public void writeEndpoint(String endpoint) throws IOException {
+        ConfigurationFile existingFileContent = readFile();
+        existingFileContent.setEndpoint(endpoint);
+        defaultObjectMapper().writeValue(configurationFile(), existingFileContent);
+    }
 
-        try {
-            File outputFile = configurationFile();
-            outputFile.createNewFile();
-            file.setToken(apiName, token);
-            defaultObjectMapper().writeValue(outputFile, file);
-        } catch (Exception e) {
-            throw e;
-        }
+    public String filePath(){
+        return System.getProperty("user.home") + "/" + configDirectory() + "/" + this.filename;
     }
 
     private File configurationFile() throws IOException {
-        File file = new File(System.getProperty("user.home") + "/.config/" + this.filename);
+        File file = new File(filePath());
 
         try {
             file.createNewFile();
@@ -94,5 +100,9 @@ public class TokenUtil {
         mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         return mapper;
+    }
+
+    protected String configDirectory(){
+        return ".config";
     }
 }

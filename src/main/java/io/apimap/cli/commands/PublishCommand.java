@@ -27,7 +27,7 @@ import io.apimap.api.rest.MetadataDataRestEntity;
 import io.apimap.api.rest.jsonapi.JsonApiRestResponseWrapper;
 import io.apimap.cli.utils.MetadataUtil;
 import io.apimap.cli.utils.TaxonomyUtil;
-import io.apimap.cli.utils.TokenUtil;
+import io.apimap.cli.utils.ConfigurationFileUtil;
 import io.apimap.client.IRestClient;
 import io.apimap.client.RestClientConfiguration;
 import io.apimap.client.exception.IncorrectTokenException;
@@ -51,13 +51,13 @@ publish --metadata <file> --taxonomy <file> --endpoint-url http://localhost
 public class PublishCommand extends ApiCommand implements Runnable {
     @CommandLine.Option(
             names = {"--metadata"},
-            description = "File path to the metadata file to be published. E.g my-api/metadata.apicatalog"
+            description = "File path to the metadata file to be published. E.g my-api/metadata.apimap"
     )
     protected String metadataFilePath;
 
     @CommandLine.Option(
             names = {"--taxonomy"},
-            description = "File path to the taxonomy file to be published. E.g my-api/taxonomy.apicatalog"
+            description = "File path to the taxonomy file to be published. E.g my-api/taxonomy.apimap"
     )
     protected String taxonomyFilePath;
 
@@ -84,10 +84,16 @@ public class PublishCommand extends ApiCommand implements Runnable {
     @Override
     public void run() {
         if (this.endpointUrl == null) {
-            System.err.println("[ERROR] Missing endpoint url");
-            return;
-        }
+            try {
+                this.endpointUrl = new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME).readEndpoint();
+            } catch (IOException ignored) {
+            }
 
+            if (this.endpointUrl == null) {
+                System.err.println("[Error] Missing endpoint url");
+                return;
+            }
+        }
         if (this.metadataFilePath == null) {
             System.err.println("[ERROR] Missing required metadata file");
             return;
@@ -131,7 +137,7 @@ public class PublishCommand extends ApiCommand implements Runnable {
         );
 
         Consumer<Object> apiCreatedCallback = content -> {
-            TokenUtil util = new TokenUtil(TokenUtil.FILENAME);
+            ConfigurationFileUtil util = new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME);
             try {
                 util.writeApiToken(((ApiDataRestEntity) content).getName(), ((ApiDataRestEntity) content).getMeta().getToken());
                 configuration.setToken(((ApiDataRestEntity) content).getMeta().getToken());

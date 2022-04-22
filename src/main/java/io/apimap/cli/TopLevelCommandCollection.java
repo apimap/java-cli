@@ -19,6 +19,7 @@ under the License.
 
 package io.apimap.cli;
 
+import io.apimap.cli.commands.ConfigCommand;
 import io.apimap.cli.commands.DeleteCommand;
 import io.apimap.cli.commands.PublishCommand;
 import io.apimap.cli.commands.RenameCommand;
@@ -37,7 +38,8 @@ import java.util.logging.LogManager;
                 ValidationCommand.class,
                 DeleteCommand.class,
                 TokenCommand.class,
-                RenameCommand.class
+                RenameCommand.class,
+                ConfigCommand.class
         }
 )
 public class TopLevelCommandCollection implements Runnable {

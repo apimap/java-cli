@@ -3,7 +3,7 @@
     "name" : "java.util.LinkedHashMap"
   },
   {
-    "name" : "io.apimap.cli.entities.TokenFile",
+    "name" : "io.apimap.cli.entities.ConfigurationFile",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,

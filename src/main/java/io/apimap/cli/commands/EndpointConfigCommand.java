@@ -19,36 +19,36 @@ under the License.
 
 package io.apimap.cli.commands;
 
-import io.apimap.cli.utils.MetadataUtil;
-import io.apimap.cli.utils.TaxonomyUtil;
+import io.apimap.cli.utils.ConfigurationFileUtil;
 import picocli.CommandLine;
 
+import java.io.IOException;
+
 @CommandLine.Command(
-        name = "validate",
-        description = "Validate metadata and taxonomy file content",
-        parameterListHeading = "Parameters"
+        name = "endpoint",
+        description = "Update endpoint configuration"
 )
-public class ValidationCommand implements Runnable {
-    @CommandLine.Option(
-            names = {"--metadata"},
-            description = "File path to the metadata file to be validated. E.g my-api/metadata.apimap"
-    )
-    protected String metadataFilePath;
+public class EndpointConfigCommand implements Runnable {
 
     @CommandLine.Option(
-            names = {"--taxonomy"},
-            description = "File path to the taxonomy file to be validated. E.g my-api/taxonomy.apimap"
+            names = {"--url"},
+            description = "Endpoint URL to the Apimap instance used. E.g http://localhost:8080"
     )
-    protected String taxonomyFilePath;
+    protected String url;
 
     @Override
     public void run() {
-        if (metadataFilePath != null) {
-            MetadataUtil.metadataFile(metadataFilePath);
+        if (this.url == null) {
+            System.err.println("[ERROR] Missing endpoint url");
+            return;
         }
 
-        if (taxonomyFilePath != null) {
-            TaxonomyUtil.taxonomyFile(taxonomyFilePath);
+        ConfigurationFileUtil util = new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME);
+        try {
+            util.writeEndpoint(url);
+            System.out.println("[OK] New endpoint: " + url);
+        } catch (IOException e) {
+            System.out.println("[ERROR] Unable to update configuration");
         }
     }
 }

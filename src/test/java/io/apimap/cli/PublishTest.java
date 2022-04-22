@@ -27,8 +27,8 @@ import java.io.IOException;
 public class PublishTest {
     @Test
     public void publishAPI_didSucceed() throws IOException {
-        PublishCommand cmd = new PublishCommand("examples/metadata.apicatalog",
-            "examples/taxonomy.apicatalog",
+        PublishCommand cmd = new PublishCommand("examples/metadata.apimap",
+            "examples/taxonomy.apimap",
                 "http://localhost:8081",
                 "git://",
                 null);

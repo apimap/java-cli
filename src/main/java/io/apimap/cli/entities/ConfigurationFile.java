@@ -21,14 +21,28 @@ package io.apimap.cli.entities;
 
 import java.util.HashMap;
 
-public class TokenFile {
+public class ConfigurationFile {
     protected HashMap<String, String> tokens = new HashMap<>();
+    protected String endpoint;
 
-    public TokenFile() {
+    public ConfigurationFile() {
     }
 
-    public TokenFile(HashMap<String, String> tokens) {
+    public ConfigurationFile(HashMap<String, String> tokens) {
         this.tokens = tokens;
+    }
+
+    public ConfigurationFile(HashMap<String, String> tokens, String endpoint) {
+        this.tokens = tokens;
+        this.endpoint = endpoint;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 
     public HashMap<String, String> getTokens() {
@@ -61,8 +75,9 @@ public class TokenFile {
 
     @Override
     public String toString() {
-        return "TokenFile{" +
+        return "ConfigurationFile{" +
                 "tokens=" + tokens +
+                ", endpoint='" + endpoint + '\'' +
                 '}';
     }
 }
