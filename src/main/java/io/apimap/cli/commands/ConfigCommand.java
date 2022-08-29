@@ -19,26 +19,29 @@ under the License.
 
 package io.apimap.cli.commands;
 
-import io.apimap.cli.utils.TokenUtil;
+import io.apimap.cli.utils.ConfigurationFileUtil;
 import picocli.CommandLine;
 
 import java.io.IOException;
 
 @CommandLine.Command(
-        name = "list",
-        description = "List all saved tokens"
+        name = "config",
+        description = "Manage configuration",
+        subcommands = {
+                EndpointConfigCommand.class
+        }
 )
-public class ListTokensCommand implements Runnable {
+public class ConfigCommand  implements Runnable {
     @Override
     public void run() {
-        TokenUtil util = new TokenUtil(TokenUtil.FILENAME);
+        final ConfigurationFileUtil util = new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME);
+
         try {
-            System.out.printf("%-30.30s  %-40.40s%n", "API", "Token");
-            util.readFile().getTokens().forEach((key, value) -> {
-                System.out.printf("%-30.30s  %-40.40s%n", key, value);
-            });
+            System.out.printf("%-20.20s  %-40.40s%n", "Parameter", "Value");
+            System.out.printf("%-20.20s  %-40.40s%n", "File location", util.filePath());
+            System.out.printf("%-20.20s  %-40.40s%n", "Endpoint", util.readEndpoint());
         } catch (IOException e) {
-            System.err.println("Unable to read config file.");
+            System.err.println("[ERROR] Unable to read config file.");
         }
     }
 }

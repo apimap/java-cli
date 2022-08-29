@@ -31,7 +31,7 @@ import java.io.IOException;
 public class TaxonomyUtil {
     public static TaxonomyFile taxonomyFile(String filePath) {
         try {
-            TaxonomyFile returnValue = validateTaxonomyFile(filePath);
+            final TaxonomyFile returnValue = validateTaxonomyFile(filePath);
 
             if (returnValue != null) {
                 System.out.println("[OK] Taxonomy validated successfully");
@@ -49,13 +49,12 @@ public class TaxonomyUtil {
         return null;
     }
 
-    private static TaxonomyFile validateTaxonomyFile(String filePath) throws IOException {
+    private static TaxonomyFile validateTaxonomyFile(final String filePath) throws IOException {
         if (filePath == null || filePath.isEmpty()) {
             throw new FileNotFoundException("[ERROR] Empty taxonomy file path");
         }
 
-        try {
-            FileInputStream fileReader = new FileInputStream(filePath);
+        try(FileInputStream fileReader = new FileInputStream(filePath)){
             return FileFactory.taxonomyFromInputStream(fileReader);
         } catch (Exception e) {
             System.err.println("[ERROR] " + e.getMessage());

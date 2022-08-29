@@ -27,12 +27,13 @@ import io.apimap.api.rest.MetadataDataRestEntity;
 import io.apimap.api.rest.jsonapi.JsonApiRestResponseWrapper;
 import io.apimap.cli.utils.MetadataUtil;
 import io.apimap.cli.utils.TaxonomyUtil;
-import io.apimap.cli.utils.TokenUtil;
+import io.apimap.cli.utils.ConfigurationFileUtil;
 import io.apimap.client.IRestClient;
 import io.apimap.client.RestClientConfiguration;
 import io.apimap.client.exception.IncorrectTokenException;
 import io.apimap.file.metadata.MetadataFile;
 import io.apimap.file.taxonomy.TaxonomyFile;
+import org.apache.hc.core5.http.ContentType;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /*
-publish --metadata <file> --taxonomy <file> --endpoint-url http://localhost
+publish --metadata <file> --taxonomy <file> --endpoint http://localhost
  */
 @CommandLine.Command(
         name = "publish",
@@ -51,13 +52,13 @@ publish --metadata <file> --taxonomy <file> --endpoint-url http://localhost
 public class PublishCommand extends ApiCommand implements Runnable {
     @CommandLine.Option(
             names = {"--metadata"},
-            description = "File path to the metadata file to be published. E.g my-api/metadata.apicatalog"
+            description = "File path to the metadata file to be published. E.g my-api/metadata.apimap"
     )
     protected String metadataFilePath;
 
     @CommandLine.Option(
             names = {"--taxonomy"},
-            description = "File path to the taxonomy file to be published. E.g my-api/taxonomy.apicatalog"
+            description = "File path to the taxonomy file to be published. E.g my-api/taxonomy.apimap"
     )
     protected String taxonomyFilePath;
 
@@ -67,47 +68,28 @@ public class PublishCommand extends ApiCommand implements Runnable {
     )
     protected String codeRepositoryUrl;
 
-    public PublishCommand(){}
-
-    public PublishCommand(String metadataFilePath,
-                          String taxonomyFilePath,
-                          String endpointUrl,
-                          String codeRepositoryUrl,
-                          String token){
-        this.metadataFilePath = metadataFilePath;
-        this.taxonomyFilePath = taxonomyFilePath;
-        this.endpointUrl = endpointUrl;
-        this.codeRepositoryUrl = codeRepositoryUrl;
-        this.token = token;
-    };
-
     @Override
     public void run() {
-        if (this.endpointUrl == null) {
-            System.err.println("[ERROR] Missing endpoint url");
-            return;
-        }
-
         if (this.metadataFilePath == null) {
             System.err.println("[ERROR] Missing required metadata file");
             return;
         }
 
-        MetadataFile metadataFile = MetadataUtil.metadataFile(metadataFilePath);
+        final MetadataFile metadataFile = MetadataUtil.metadataFile(metadataFilePath);
 
         if (metadataFile == null) {
             System.err.println("[ERROR] Empty metadata file");
             return;
         }
 
-        RestClientConfiguration configuration = defaultConfiguration(metadataFile.getData().getName());
+        final RestClientConfiguration configuration = defaultConfiguration(metadataFile.getData().getName());
         uploadMetadata(metadataFile, configuration);
         uploadTaxonomy(metadataFile.getData().getName(), metadataFile.getData().getApiVersion(), configuration);
     }
 
-    private void uploadMetadata(MetadataFile metadataFile, RestClientConfiguration configuration){
-
-        MetadataDataRestEntity metadataDataApiEntity = new MetadataDataRestEntity(
+    private void uploadMetadata(final MetadataFile metadataFile,
+                                final RestClientConfiguration configuration){
+        final MetadataDataRestEntity metadataDataApiEntity = new MetadataDataRestEntity(
                 metadataFile.getData().getName(),
                 metadataFile.getData().getDescription(),
                 metadataFile.getData().getVisibility(),
@@ -121,17 +103,17 @@ public class PublishCommand extends ApiCommand implements Runnable {
                 metadataFile.getData().getDocumentation()
         );
 
-        ApiDataRestEntity apiDataApiEntity = new ApiDataRestEntity(
+        final ApiDataRestEntity apiDataApiEntity = new ApiDataRestEntity(
                 metadataDataApiEntity.getName(),
                 this.codeRepositoryUrl
         );
 
-        ApiVersionDataRestEntity apiVersionDataApiEntity = new ApiVersionDataRestEntity(
+        final ApiVersionDataRestEntity apiVersionDataApiEntity = new ApiVersionDataRestEntity(
                 metadataDataApiEntity.getApiVersion()
         );
 
-        Consumer<Object> apiCreatedCallback = content -> {
-            TokenUtil util = new TokenUtil(TokenUtil.FILENAME);
+        final Consumer<Object> apiCreatedCallback = content -> {
+            ConfigurationFileUtil util = new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME);
             try {
                 util.writeApiToken(((ApiDataRestEntity) content).getName(), ((ApiDataRestEntity) content).getMeta().getToken());
                 configuration.setToken(((ApiDataRestEntity) content).getMeta().getToken());
@@ -141,11 +123,11 @@ public class PublishCommand extends ApiCommand implements Runnable {
             System.out.println("[OK] API \"" + ((ApiDataRestEntity) content).getName() + "\" created with access token: " + ((ApiDataRestEntity) content).getMeta().getToken());
         };
 
-        Consumer<Object> apiVersionCreatedCallback = content -> {
+        final Consumer<Object> apiVersionCreatedCallback = content -> {
             System.out.println("[OK] New API version created");
         };
 
-        Consumer<String> errorHandlerCallback = content -> {
+        final Consumer<String> errorHandlerCallback = content -> {
             System.err.println("[ERROR] Upload failed with: " + content);
         };
 
@@ -161,7 +143,7 @@ public class PublishCommand extends ApiCommand implements Runnable {
                     .followResource(metadataDataApiEntity.getApiVersion())
                     .onMissingCreate(metadataDataApiEntity.getApiVersion(), apiVersionDataApiEntity, apiVersionCreatedCallback)
                     .followCollection(JsonApiRestResponseWrapper.METADATA_COLLECTION)
-                    .createOrUpdateResource(metadataDataApiEntity);
+                    .createOrUpdateResource(metadataDataApiEntity, ContentType.APPLICATION_JSON);
         } catch (IOException e) {
             System.err.println(e);
         } catch (IncorrectTokenException e) {
@@ -176,14 +158,16 @@ public class PublishCommand extends ApiCommand implements Runnable {
         System.out.println("[OK] Metadata published successfully");
     }
 
-    private void uploadTaxonomy(String apiName, String apiVersion, RestClientConfiguration configuration){
-        TaxonomyFile taxonomyFile = TaxonomyUtil.taxonomyFile(taxonomyFilePath);
+    private void uploadTaxonomy(final String apiName,
+                                final String apiVersion,
+                                final RestClientConfiguration configuration){
+        final TaxonomyFile taxonomyFile = TaxonomyUtil.taxonomyFile(taxonomyFilePath);
 
         if (taxonomyFile == null) {
             return;
         }
 
-        ClassificationRootRestEntity classificationRootRestEntity = new ClassificationRootRestEntity(
+        final ClassificationRootRestEntity classificationRootRestEntity = new ClassificationRootRestEntity(
                 taxonomyFile
                         .getData()
                         .getClassifications()
@@ -193,17 +177,17 @@ public class PublishCommand extends ApiCommand implements Runnable {
         );
 
         try {
-            Consumer<String> errorHandlerCallback = content -> {
+            final Consumer<String> errorHandlerCallback = content -> {
                 System.err.println("[ERROR] Upload failed with: " + content);
             };
 
-            ClassificationRootRestEntity classificationReturnObject = IRestClient.withConfiguration(configuration)
+            final ClassificationRootRestEntity classificationReturnObject = IRestClient.withConfiguration(configuration)
                     .withErrorHandler(errorHandlerCallback)
                     .followCollection(JsonApiRestResponseWrapper.API_COLLECTION)
                     .followCollection(apiName, JsonApiRestResponseWrapper.VERSION_COLLECTION)
                     .followResource(apiVersion)
                     .followCollection(JsonApiRestResponseWrapper.CLASSIFICATION_COLLECTION)
-                    .createOrUpdateResource(classificationRootRestEntity);
+                    .createOrUpdateResource(classificationRootRestEntity, ContentType.APPLICATION_JSON);
 
             if (classificationReturnObject == null) {
                 System.err.println("[ERROR] Unable to upload taxonomy classifications");

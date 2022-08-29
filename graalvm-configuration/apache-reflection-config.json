@@ -1,9 +1,9 @@
 [
   {
-    "name" : "org.apache.commons.logging.LogConfigurationException"
+    "name" : "java.util.LinkedHashMap"
   },
   {
-    "name": "org.apache.commons.logging.impl.LogFactoryImpl",
+    "name": "java.lang.ClassNotFoundException",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,
@@ -18,31 +18,6 @@
   },
   {
     "name": "java.lang.String",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true,
-    "allDeclaredMethods": true,
-    "allPublicMethods": true,
-    "allDeclaredClasses": true,
-    "allPublicClasses": true
-  },
-  {
-    "name": "org.apache.commons.logging.LogFactory",
-    "allDeclaredConstructors": true,
-    "allPublicConstructors": true,
-    "allDeclaredMethods": true,
-    "allPublicMethods": true,
-    "allDeclaredClasses": true,
-    "allPublicClasses": true
-  },
-  {
-    "name" : "org.apache.commons.logging.impl.Jdk14Logger",
-    "allDeclaredConstructors" : true,
-    "allPublicConstructors" : true,
-    "allDeclaredMethods" : true,
-    "allPublicMethods" : true
-  },
-  {
-    "name": "org.apache.commons.logging.impl.SimpleLog",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,

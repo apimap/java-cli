@@ -29,9 +29,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class MetadataUtil {
-    public static MetadataFile metadataFile(String filePath) {
+    public static MetadataFile metadataFile(final String filePath) {
         try {
-            MetadataFile returnValue = validateMetadataFile(filePath);
+            final MetadataFile returnValue = validateMetadataFile(filePath);
 
             if (returnValue != null) {
                 System.err.println("[OK] Metadata validated successfully");
@@ -49,13 +49,12 @@ public class MetadataUtil {
         return null;
     }
 
-    private static MetadataFile validateMetadataFile(String filePath) throws IOException {
+    private static MetadataFile validateMetadataFile(final String filePath) throws IOException {
         if (filePath == null || filePath.isEmpty()) {
             throw new FileNotFoundException("[ERROR] Empty metadata file path");
         }
 
-        try {
-            FileInputStream fileReader = new FileInputStream(filePath);
+        try(final FileInputStream fileReader = new FileInputStream(filePath)) {
             return FileFactory.metadataFromInputStream(fileReader);
         } catch (Exception e) {
             System.err.println("[ERROR] " + e.getMessage());

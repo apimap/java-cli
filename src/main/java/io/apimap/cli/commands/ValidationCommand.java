@@ -31,13 +31,13 @@ import picocli.CommandLine;
 public class ValidationCommand implements Runnable {
     @CommandLine.Option(
             names = {"--metadata"},
-            description = "File path to the metadata file to be validated. E.g my-api/metadata.apicatalog"
+            description = "File path to the metadata file to be validated. E.g my-api/metadata.apimap"
     )
     protected String metadataFilePath;
 
     @CommandLine.Option(
             names = {"--taxonomy"},
-            description = "File path to the taxonomy file to be validated. E.g my-api/taxonomy.apicatalog"
+            description = "File path to the taxonomy file to be validated. E.g my-api/taxonomy.apimap"
     )
     protected String taxonomyFilePath;
 

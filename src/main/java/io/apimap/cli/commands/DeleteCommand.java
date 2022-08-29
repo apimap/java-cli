@@ -20,11 +20,9 @@ under the License.
 package io.apimap.cli.commands;
 
 import io.apimap.api.rest.jsonapi.JsonApiRestResponseWrapper;
-import io.apimap.cli.utils.MetadataUtil;
 import io.apimap.client.IRestClient;
 import io.apimap.client.RestClientConfiguration;
 import io.apimap.client.exception.IncorrectTokenException;
-import io.apimap.file.metadata.MetadataFile;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -34,10 +32,16 @@ import picocli.CommandLine;
 )
 public class DeleteCommand extends ApiCommand implements Runnable {
     @CommandLine.Option(
-            names = {"--metadata"},
-            description = "File path to the metadata file to be published. E.g my-api/metadata.apicatalog"
+            names = {"--api"},
+            description = "Name of the API to be updated"
     )
-    protected String metadataFilePath;
+    protected String apiName;
+
+    @CommandLine.Option(
+            names = {"--version"},
+            description = "Name of the API version to be updated"
+    )
+    protected String apiVersion;
 
     @CommandLine.Option(
             names = {"--recursive"},
@@ -46,39 +50,51 @@ public class DeleteCommand extends ApiCommand implements Runnable {
     )
     protected boolean recursive;
 
+    @CommandLine.Option(
+            names = {"--confirmation"},
+            description = "This will permanently REMOVE ALL information.",
+            interactive = true,
+            arity="0..1"
+    )
+    protected Boolean confirmation;
+
     @Override
     public void run() {
-        if (this.endpointUrl == null) {
-            System.err.println("[Error] Missing endpoint url");
+        if (this.apiName == null) {
+            System.err.println("[Error] Missing API name");
             return;
         }
 
-        if (this.metadataFilePath == null) {
-            System.err.println("[Error] Missing metadata file");
+        if (this.apiVersion == null) {
+            System.err.println("[Error] Missing API version");
             return;
         }
 
-        MetadataFile metadataFile = MetadataUtil.metadataFile(metadataFilePath);
-        RestClientConfiguration configuration = defaultConfiguration(metadataFile.getData().getName());
+        if (confirmation == null) {
+            String s = System.console().readLine("This will permanently REMOVE ALL information. Continue? y/n: ");
+            confirmation = Boolean.valueOf(s) || "y".equalsIgnoreCase(s);
+        }
 
-        if (metadataFile == null) {
+        if(!confirmation){
+            System.out.println("[CANCEL] Operation canceled");
             return;
         }
 
+        final RestClientConfiguration configuration = defaultConfiguration(apiName);
         int metadataUploadStatus = 0;
 
         try {
             if (this.recursive) {
                 metadataUploadStatus = IRestClient.withConfiguration(configuration)
                         .followCollection(JsonApiRestResponseWrapper.API_COLLECTION)
-                        .followResource(metadataFile.getData().getName())
+                        .followResource(apiName)
                         .deleteResource();
             } else {
                 metadataUploadStatus = IRestClient.withConfiguration(configuration)
                         .followCollection(JsonApiRestResponseWrapper.API_COLLECTION)
-                        .followResource(metadataFile.getData().getName())
+                        .followResource(apiName)
                         .followCollection(JsonApiRestResponseWrapper.VERSION_COLLECTION)
-                        .followResource(metadataFile.getData().getApiVersion())
+                        .followResource(apiVersion)
                         .deleteResource();
             }
 

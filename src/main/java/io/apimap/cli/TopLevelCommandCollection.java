@@ -19,17 +19,13 @@ under the License.
 
 package io.apimap.cli;
 
-import io.apimap.cli.commands.DeleteCommand;
-import io.apimap.cli.commands.PublishCommand;
-import io.apimap.cli.commands.RenameCommand;
-import io.apimap.cli.commands.TokenCommand;
-import io.apimap.cli.commands.ValidationCommand;
+import io.apimap.cli.commands.*;
 import picocli.CommandLine;
 
 import java.util.logging.LogManager;
 
 @CommandLine.Command(
-        version = "1.0.1",
+        versionProvider = DynamicVersionProvider.class,
         name = "apimap",
         mixinStandardHelpOptions = true,
         subcommands = {
@@ -37,7 +33,9 @@ import java.util.logging.LogManager;
                 ValidationCommand.class,
                 DeleteCommand.class,
                 TokenCommand.class,
-                RenameCommand.class
+                RenameCommand.class,
+                ConfigCommand.class,
+                DocumentCommand.class
         }
 )
 public class TopLevelCommandCollection implements Runnable {

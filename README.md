@@ -14,6 +14,11 @@ to be tied to an API proxy or management solution? The Apimap.io project uploads
 your organizations APIs. We care about the source code, removing the limitation of where the API is hosted and how your
 network is constructed.
 
+### Telenor Open Source Project
+This project is a part of the Open Source initiatives in Telenor. Read more about our company at http://www.telenor.com
+
+![TelenorLogo](doc/telenor.png)
+
 ## Table of Contents
 
 * [Project Components](#project-components)
@@ -45,17 +50,27 @@ find useful, create the rest to custom fit your organization.
 | ------------------------- | ----------------------------------------------------------------------------- |
 | apimap validate           | Validate the content of the metadata and taxonomy file. **Arguments:** **--metadata** 'filename' **--taxonomy** 'filename' |
 
-| Command                   | Description                                                                   |
-| ------------------------- | ----------------------------------------------------------------------------- |
-| apimap rename             | Rename an existing API. **Arguments:** **--from** 'old name' **--to** 'new name' **--endpoint-url** 'url to apimap instance' **--token** 'token if not handled by CLI'|
+| Command                   | Description                                                                                                                                                             |
+| ------------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| apimap rename             | Rename an existing API. **Arguments:** **--from** 'old name' **--to** 'new name' **--endpoint** 'url to apimap instance if not handled by CLI' **--token** 'token if not handled by CLI' |
 
-| Command                   | Description                                                                   |
-| ------------------------- | ----------------------------------------------------------------------------- |
-| apimap publish            | Upload metadata and taxonomy files. This will also create the API if it is not already present in the catalog. **Arguments:** **--metadata** 'filename' **--taxonomy** 'filename' **--code-repository-url** 'code repository url' **--endpoint-url** 'url to apimap instance' **--token** 'token if not handled by CLI'|
+| Command                   | Description                                                                                                                                                                                                                                                                                                              |
+| ------------------------- |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| apimap publish            | Upload metadata and taxonomy files. This will also create the API if it is not already present in the catalog. **Arguments:** **--metadata** 'filename' **--taxonomy** 'filename' **--code-repository-url** 'code repository url' **--endpoint** 'url to apimap instance if not handled by CLI' **--token** 'token if not handled by CLI' |
 
-| Command                   | Description                                                                   |
-| ------------------------- | ----------------------------------------------------------------------------- |
-| apimap delete             | Delete an API from the catalog. Default this will only delete the version listed in the metadata file. **Arguments:** **--metadata** 'filename' **--recursive** true/false **--endpoint-url** 'url to apimap instance' **--token** 'token if not handled by CLI'|
+| Command                   | Description                                                                                                                                                                                                                                                       |
+| ------------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| apimap delete             | Delete an API from the catalog. Default this will only delete the version listed in the metadata file. **Arguments:** **--metadata** 'filename' **--recursive** true/false **--endpoint** 'url to apimap instance if not handled by CLI' **--token** 'token if not handled by CLI' |
+
+| Command                  | Description                                                                                           |
+|--------------------------|-------------------------------------------------------------------------------------------------------|
+| apimap config            | View current saved configuration                                                                      |
+| apimap config endpoint   | Set endpoint url to be used instead of input argument. **Arguments:** **--url** 'Apimap instance url' |
+
+| Command      | Description           |
+|--------------|-----------------------|
+| apimap token | Manage stored tokens  |
+
 
 ## Build and Run
 ___

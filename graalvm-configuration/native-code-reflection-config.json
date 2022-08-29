@@ -1,9 +1,21 @@
 [
   {
-    "name" : "java.util.LinkedHashMap"
+    "name" : "io.apimap.cli.entities.ConfigurationFile",
+    "allPublicConstructors" : true,
+    "allPublicMethods" : true,
+    "allDeclaredFields" : true,
+    "allPublicFields" : true,
+    "allPublicClasses" : true,
+    "allDeclaredClasses" : true,
+    "queryAllDeclaredConstructors" : true,
+    "queryAllPublicConstructors" : true,
+    "queryAllDeclaredMethods" : true,
+    "queryAllPublicMethods" : true,
+    "allDeclaredConstructors" : true,
+    "allDeclaredMethods" : true
   },
   {
-    "name" : "io.apimap.cli.entities.TokenFile",
+    "name" : "io.apimap.cli.entities.ConfigurationFile$Token",
     "allPublicConstructors" : true,
     "allPublicMethods" : true,
     "allDeclaredFields" : true,

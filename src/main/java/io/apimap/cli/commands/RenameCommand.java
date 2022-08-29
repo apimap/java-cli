@@ -21,9 +21,11 @@ package io.apimap.cli.commands;
 
 import io.apimap.api.rest.ApiDataRestEntity;
 import io.apimap.api.rest.jsonapi.JsonApiRestResponseWrapper;
+import io.apimap.cli.utils.ConfigurationFileUtil;
 import io.apimap.client.IRestClient;
 import io.apimap.client.RestClientConfiguration;
 import io.apimap.client.exception.IncorrectTokenException;
+import org.apache.hc.core5.http.ContentType;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -49,11 +51,6 @@ public class RenameCommand extends ApiCommand implements Runnable {
 
     @Override
     public void run() {
-        if (this.endpointUrl == null) {
-            System.err.println("[Error] Missing endpoint url");
-            return;
-        }
-
         if (this.fromName == null) {
             System.err.println("[Error] Missing current name");
             return;
@@ -64,38 +61,43 @@ public class RenameCommand extends ApiCommand implements Runnable {
             return;
         }
 
-        RestClientConfiguration configuration = defaultConfiguration(fromName);
+        final RestClientConfiguration configuration = defaultConfiguration(fromName);
 
         try {
-            Consumer<String> errorHandlerCallback = content -> {
+            final Consumer<String> errorHandlerCallback = content -> {
                 System.err.println("Rename failed with: " + content);
             };
 
-            ApiDataRestEntity entity = IRestClient.withConfiguration(configuration)
+            final ApiDataRestEntity oldEntity = IRestClient.withConfiguration(configuration)
                     .withErrorHandler(errorHandlerCallback)
                     .followCollection(JsonApiRestResponseWrapper.API_COLLECTION)
                     .followResource(fromName)
-                    .getResource(ApiDataRestEntity.class);
+                    .getResource(ApiDataRestEntity.class, ContentType.APPLICATION_JSON);
 
-            if(entity == null){
+            if(oldEntity == null){
                 System.err.println("[Error] Unable to get '" + fromName + "'");
                 return;
             }
 
-            entity.setName(toName);
+            oldEntity.setName(toName);
 
-            ApiDataRestEntity newEntity = IRestClient.withConfiguration(configuration)
+            final ApiDataRestEntity newEntity = IRestClient.withConfiguration(configuration)
                     .withErrorHandler(errorHandlerCallback)
                     .followCollection(JsonApiRestResponseWrapper.API_COLLECTION)
                     .followResource(fromName)
-                    .createOrUpdateResource(entity);
+                    .createOrUpdateResource(oldEntity, ContentType.APPLICATION_JSON);
 
-            if(newEntity != null){
-                System.out.println("[OK] Renamed API from '" + fromName + "' to '" + toName + "'");
+            if(newEntity == null){
+                System.err.println("[ERROR] Unable to get new renamed API");
                 return;
             }
 
-            System.err.println("[Error] Unable to rename API");
+            final ConfigurationFileUtil util = new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME);
+            util.writeApiToken(toName, util.readApiToken(fromName));
+            util.removeApiToken(fromName);
+
+            System.out.println("[OK] Renamed API from '" + fromName + "' to '" + toName + "'");
+            System.out.println("[NOTICE] Remember to upload a new metadata file with that contains the new name to complete the change");
         } catch (IOException | IncorrectTokenException e) {
             e.printStackTrace();
         }

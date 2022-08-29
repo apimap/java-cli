@@ -2,6 +2,7 @@ plugins {
     id 'application'
     id 'java'
     id 'org.mikeneck.graalvm-native-image' version 'v1.4.1'
+    id "com.github.spotbugs" version "5.0.9"
 }
 
 group 'io.apimap.cli'
@@ -30,19 +31,19 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor "info.picocli:picocli-codegen:4.6.2"
+    annotationProcessor 'info.picocli:picocli-codegen:4.6.3'
 
     implementation 'info.picocli:picocli:4.6.3'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.2'
-    implementation 'commons-logging:commons-logging:1.2'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-    implementation 'org.graalvm.sdk:graal-sdk:21.2.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+    implementation "org.apache.httpcomponents.client5:httpclient5:5.1.3"
+    implementation 'org.graalvm.sdk:graal-sdk:22.1.0.1'
+    implementation 'org.slf4j:slf4j-nop:1.7.36' // NOP since we have to give the user more understandable errors
 
     implementation 'io.apimap.file:file-interface:1.0'
-    implementation 'io.apimap.client:rest-client:2.0.5'
-    implementation 'io.apimap.api:rest-interface:2.1.3'
+    implementation 'io.apimap.client:rest-client:3.0.1'
+    implementation 'io.apimap.api:rest-interface:2.2.0'
 
     testImplementation 'junit:junit:4.13.2'
 }
@@ -58,8 +59,10 @@ nativeImage {
             "--verbose",
             "--no-fallback",
             "--report-unsupported-elements-at-runtime",
+            "-H:Log=registerResource:",
             "-H:ReflectionConfigurationFiles=graalvm-configuration/native-code-reflection-config.json",
             "-H:ReflectionConfigurationFiles=graalvm-configuration/apache-reflection-config.json",
+            "-H:ResourceConfigurationFiles=graalvm-configuration/resource-config.json",
             "-H:DynamicProxyConfigurationFiles=graalvm-configuration/apache-proxy-config.json",
     )
     doLast{
@@ -88,7 +91,7 @@ jar {
     manifest {
         attributes(
                 "Main-Class": javaMainClass,
-                'Class-Path': 'picocli-4.6.1.jar'
+                'Apimap-Version': archiveVersion
         )
     }
 }

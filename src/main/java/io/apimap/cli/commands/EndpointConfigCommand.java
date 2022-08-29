@@ -25,22 +25,30 @@ import picocli.CommandLine;
 import java.io.IOException;
 
 @CommandLine.Command(
-        name = "token",
-        description = "Manage stored tokens"
+        name = "endpoint",
+        description = "Update endpoint configuration"
 )
-public class TokenCommand implements Runnable {
+public class EndpointConfigCommand implements Runnable {
+
+    @CommandLine.Option(
+            names = {"--url"},
+            description = "Endpoint URL to the Apimap instance used. E.g http://localhost:8080"
+    )
+    protected String url;
 
     @Override
     public void run() {
-        final ConfigurationFileUtil util = new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME);
+        if (this.url == null) {
+            System.err.println("[ERROR] Missing endpoint url");
+            return;
+        }
 
+        final ConfigurationFileUtil util = new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME);
         try {
-            System.out.printf("%-30.30s  %-40.40s%n", "API", "Token");
-            util.readFile().getTokens().forEach((token) -> {
-                System.out.printf("%-30.30s  %-40.40s%n", token.getApiName(), token.getToken());
-            });
+            util.writeEndpoint(url);
+            System.out.println("[OK] New endpoint: " + url);
         } catch (IOException e) {
-            System.err.println("Unable to read config file.");
+            System.out.println("[ERROR] Unable to update configuration");
         }
     }
 }

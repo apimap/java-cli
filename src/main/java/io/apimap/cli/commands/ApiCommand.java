@@ -19,7 +19,7 @@ under the License.
 
 package io.apimap.cli.commands;
 
-import io.apimap.cli.utils.TokenUtil;
+import io.apimap.cli.utils.ConfigurationFileUtil;
 import io.apimap.client.RestClientConfiguration;
 import picocli.CommandLine;
 
@@ -27,11 +27,10 @@ import java.io.IOException;
 
 public class ApiCommand {
     @CommandLine.Option(
-            names = {"--endpoint-url"},
+            names = {"--endpoint"},
             description = "Root host URL the apimap.io instance to be used. E.g http://api.apimap.io/"
     )
     protected String endpointUrl;
-
 
     @CommandLine.Option(
             names = {"--token"},
@@ -39,14 +38,25 @@ public class ApiCommand {
     )
     protected String token;
 
-    RestClientConfiguration defaultConfiguration(String apiName){
+    final RestClientConfiguration defaultConfiguration(String apiName){
         if (this.token == null) {
             try {
-                return new RestClientConfiguration(new TokenUtil(TokenUtil.FILENAME).readApiToken(apiName), endpointUrl);
-            } catch (IOException e) {
-            }
+                return new RestClientConfiguration(new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME).readApiToken(apiName), getEndpointUrl());
+            } catch (IOException ignored) {}
         }
 
-        return new RestClientConfiguration(this.token, endpointUrl);
+        return new RestClientConfiguration(this.token, getEndpointUrl());
+    }
+
+    public String getEndpointUrl(){
+        if(endpointUrl != null){
+            return endpointUrl;
+        }
+
+        try {
+            return new ConfigurationFileUtil(ConfigurationFileUtil.FILENAME).readEndpoint();
+        } catch (IOException ignored) {
+            return null;
+        }
     }
 }
