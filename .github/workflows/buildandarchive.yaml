@@ -26,8 +26,8 @@ jobs:
         with:
           draft: false
           prerelease: false
-          release_name: ${{ steps.semantic_release_info.outputs.version }}
-          tag_name: ${{ steps.semantic_release_info.outputs.version }}
+          release_name: v${{ steps.semantic_release_info.outputs.version }}
+          tag_name: v${{ steps.semantic_release_info.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
