@@ -124,3 +124,4 @@ jobs:
           asset_path: "build/executable/apimap"
           asset_name: apimap-macos-amd64
           asset_content_type: application/octet-stream
+
