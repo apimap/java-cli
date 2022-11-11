@@ -36,7 +36,7 @@ public class TokenCommand implements Runnable {
 
         try {
             System.out.printf("%-30.30s  %-40.40s%n", "API", "Token");
-            util.readFile().getTokens().forEach((token) -> {
+            util.readFile().getTokenArray().forEach((token) -> {
                 System.out.printf("%-30.30s  %-40.40s%n", token.getApiName(), token.getToken());
             });
         } catch (IOException e) {

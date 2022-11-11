@@ -19,6 +19,8 @@ under the License.
 
 package io.apimap.cli.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,11 @@ public class ConfigurationFile {
 
     public ConfigurationFile(final String endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public ConfigurationFile(final String endpoint, final HashMap<String, String> tokens) {
+        this.endpoint = endpoint;
+        this.tokens = tokens;
     }
 
     public String getEndpoint() {
@@ -48,7 +55,12 @@ public class ConfigurationFile {
         }
     }
 
-    public List<Token> getTokens() {
+    public HashMap<String, String> getTokens() {
+        return this.tokens;
+    }
+
+    @JsonIgnore
+    public List<Token> getTokenArray() {
         if (tokens == null) { return new ArrayList<>();}
         return tokens
                 .keySet()
@@ -69,8 +81,11 @@ public class ConfigurationFile {
     }
 
     public static class Token {
-        private final String apiName;
-        private final String token;
+        private String apiName;
+        private String token;
+
+        public Token(){
+        }
 
         public Token(String apiName, String token) {
             this.apiName = apiName;
@@ -83,6 +98,14 @@ public class ConfigurationFile {
 
         public String getToken() {
             return token;
+        }
+
+        public void setApiName(String apiName) {
+            this.apiName = apiName;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
         }
 
         @Override

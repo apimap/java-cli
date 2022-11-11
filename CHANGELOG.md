@@ -1,6 +1,9 @@
 Changelog
 ===
 
+### 11.11.2022
+- Fixed config deserialization bug
+
 ### 26.08.2022
 - Set version number from argument
 
